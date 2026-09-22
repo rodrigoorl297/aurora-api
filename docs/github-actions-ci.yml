@@ -8,6 +8,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test-only-ci-key
+      APP_ENV: test
+      CORS_ORIGINS: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

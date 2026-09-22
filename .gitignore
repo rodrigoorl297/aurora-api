@@ -10,5 +10,4 @@ build/
 *.egg-info/
 .coverage
 htmlcov/
-node_modules/
 .DS_Store

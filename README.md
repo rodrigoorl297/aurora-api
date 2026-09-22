@@ -1,4 +1,4 @@
-# Lumen API
+# Aurora API
 
 API com autenticacao, trilhas de auditoria e relatorios prontos para o time de ops.
 
