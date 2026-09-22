@@ -1,25 +1,24 @@
 from fastapi.testclient import TestClient
 
+from app.auth import create_token
 from app.main import app
 
 client = TestClient(app)
 
 
 def auth_header() -> dict[str, str]:
-    token = client.post("/auth/login", json={"username": "demo", "password": "demo123"}).json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
+    return {"Authorization": f"Bearer {create_token('test-user')}"}
 
 
-def test_login_and_crud():
+def test_requires_auth_and_crud():
     denied = client.get("/api/v1/entries")
     assert denied.status_code == 401
 
-    headers = auth_header()
     created = client.post(
         "/api/v1/entries",
-        headers=headers,
+        headers=auth_header(),
         json={
-            "reference": "demo-001",
+            "reference": "ref-001",
             "amount_cents": "alpha",
             "currency": "beta",
             "status": "posted",
@@ -28,6 +27,6 @@ def test_login_and_crud():
     assert created.status_code == 201
     item_id = created.json()["id"]
 
-    listed = client.get("/api/v1/entries", headers=headers)
+    listed = client.get("/api/v1/entries", headers=auth_header())
     assert listed.status_code == 200
     assert any(row["id"] == item_id for row in listed.json())

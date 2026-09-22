@@ -2,13 +2,12 @@
 
 ```mermaid
 flowchart LR
-  Client -->|JWT| API[FastAPI]
-  API --> Auth[Auth module]
-  API --> CRUD[LedgerEntry CRUD]
+  Client -->|Bearer JWT| API[FastAPI]
+  API --> CRUD[LedgerEntry]
   CRUD --> DB[(SQLite / Postgres)]
 ```
 
-- Public healthcheck without auth.
-- Login issues an HS256 JWT (8h).
-- `/api/v1/entries` is protected and persisted via SQLAlchemy.
-- Swap `DATABASE_URL` to Postgres without code changes.
+- `/health` is public and does not leak environment details.
+- `SECRET_KEY` comes from the environment. There is no default and no login with a published password.
+- CORS is an allowlist (`CORS_ORIGINS`), not `*`.
+- `/api/v1/entries` requires a valid JWT.

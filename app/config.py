@@ -4,12 +4,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    app_name: str = "Aurora API"
+    app_name: str = "Lumen API"
     app_env: str = "development"
-    secret_key: str = "change-me"
+    secret_key: str
     database_url: str = "sqlite:///./app.db"
-    demo_user: str = "demo"
-    demo_password: str = "demo123"
+    cors_origins: str = "http://localhost:5173"
+
+    @property
+    def origin_list(self) -> list[str]:
+        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
 
 settings = Settings()
